@@ -15,8 +15,8 @@ class AppColors {
   static const Color cardGradientEnd = Color(0xFFE0CCFF);
 
   // Shadows
-  static Color heartShadow = Colors.redAccent.withOpacity(0.4);
-  static Color cardShadow = Colors.grey.withOpacity(0.2);
+  static Color heartShadow = Colors.redAccent.withValues(alpha:0.4);
+  static Color cardShadow = Colors.grey.withValues(alpha:0.2);
 
   // Text
   static const Color appBarText = Colors.white;
