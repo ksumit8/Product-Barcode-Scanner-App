@@ -2,9 +2,9 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="barcodescanner"
+        android:label="product"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/product">
         <activity
             android:name=".MainActivity"
             android:exported="true"
