@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import '../../../core/widgets/common_app_bar.dart';
+import '../../../core/theme/app_colors.dart';
 import 'provider/scanner_provider.dart';
 import '../../product/presentation/product_screen.dart';
 
@@ -62,28 +63,31 @@ class _ScanningPageState extends State<ScanningPage> {
     }
 
     return Scaffold(
-      appBar: CommonAppBar(title: "Scan Barcode"),
+      appBar: const CommonAppBar(title: "Scan Barcode"),
       body: Stack(
         children: [
+          //Scanner View
           MobileScanner(
             controller: scannerController,
             onDetect: _handleBarcode,
           ),
 
-
+          // Loader while fetching product
           if (provider.isLoading)
             Center(
               child: SizedBox(
-                width: screenWidth * 0.2, // responsive size
+                width: screenWidth * 0.2,
                 height: screenWidth * 0.2,
                 child: const CircularProgressIndicator(
                   strokeWidth: 6,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.cyanAccent),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    AppColors.heartGradientEnd,
+                  ),
                 ),
               ),
             ),
 
-
+          // Show scanned message if invalid product
           if (!provider.isLoading &&
               provider.scannedResult != null &&
               provider.scannedProduct == null)
@@ -91,17 +95,23 @@ class _ScanningPageState extends State<ScanningPage> {
               alignment: Alignment.bottomCenter,
               child: Container(
                 height: screenHeight * 0.1,
-                // adaptive height
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                color: Colors.black54,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.black87, Colors.black54],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
                 alignment: Alignment.center,
                 child: Text(
                   provider.scannedResult!,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.appBarText,
                     fontSize: textScaler.scale(16),
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),

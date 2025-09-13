@@ -10,9 +10,9 @@ class ProductRepositoryImpl {
 
     try {
       final response = await http.get(url).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException("Request timed out"),
-      );
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException("Request timed out"),
+          );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

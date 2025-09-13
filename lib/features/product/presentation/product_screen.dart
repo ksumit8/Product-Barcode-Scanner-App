@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/widgets/common_app_bar.dart';
+import '../../../core/theme/app_colors.dart';
 import '../domain/product.dart';
 import 'provider/favorites_provider.dart';
 
@@ -20,9 +22,7 @@ class ProductScreen extends StatelessWidget {
     final textScale = MediaQuery.textScalerOf(context).scale(1.0);
 
     return Scaffold(
-      appBar: CommonAppBar(
-        title: "Product",
-      ),
+      appBar: const CommonAppBar(title: "Product"),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(screenWidth * 0.04),
         child: Column(
@@ -32,17 +32,17 @@ class ProductScreen extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [
-                    Colors.blue.shade100,
-                    Colors.purple.shade100,
+                    AppColors.cardGradientStart,
+                    AppColors.cardGradientEnd,
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
+                    color: AppColors.cardShadow,
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -59,7 +59,7 @@ class ProductScreen extends StatelessWidget {
                       if (loadingProgress == null) return child;
                       return const Center(
                         child: CircularProgressIndicator(
-                          color: Colors.white,
+                          color: AppColors.loader,
                         ),
                       );
                     },
@@ -78,6 +78,7 @@ class ProductScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 20 * textScale,
+                    color: AppColors.textPrimary,
                   ),
             ),
             SizedBox(height: screenHeight * 0.01),
@@ -89,7 +90,7 @@ class ProductScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18 * textScale,
                 fontWeight: FontWeight.w600,
-                color: Colors.green,
+                color: AppColors.priceGreen,
               ),
             ),
             SizedBox(height: screenHeight * 0.03),
@@ -116,7 +117,9 @@ class ProductScreen extends StatelessWidget {
                 child: Icon(
                   isFavorite ? Icons.favorite : Icons.favorite_border,
                   key: ValueKey(isFavorite),
-                  color: isFavorite ? Colors.red : Colors.grey,
+                  color: isFavorite
+                      ? AppColors.heartGradientEnd
+                      : AppColors.iconGrey,
                   size: screenWidth * 0.07,
                 ),
               ),
@@ -125,13 +128,19 @@ class ProductScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14 * textScale,
                   fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
                 ),
               ),
               style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.buttonBackground,
                 padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * 0.05,
                   vertical: screenHeight * 0.015,
                 ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 4,
               ),
             ),
           ],

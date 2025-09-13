@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../core/widgets/common_app_bar.dart';
+import '../../../core/theme/app_colors.dart';
 import '../domain/product.dart';
 import 'product_screen.dart';
 import 'provider/favorites_provider.dart';
@@ -17,9 +20,9 @@ class FavoritesScreen extends StatelessWidget {
     final textScale = MediaQuery.textScalerOf(context).scale(1.0);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("My Favorites"),
-        centerTitle: true,
+      appBar: const CommonAppBar(
+        title: "My Favorites",
+        showFavorites: false, // hide heart button
       ),
       body: favorites.isEmpty
           ? Center(
@@ -27,7 +30,7 @@ class FavoritesScreen extends StatelessWidget {
                 "No favorite products yet.",
                 style: TextStyle(
                   fontSize: 16 * textScale,
-                  color: Colors.grey,
+                  color: AppColors.textMuted,
                 ),
               ),
             )
@@ -41,17 +44,17 @@ class FavoritesScreen extends StatelessWidget {
                   margin: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [
-                        Colors.blue.shade100,
-                        Colors.purple.shade100,
+                        AppColors.cardGradientStart,
+                        AppColors.cardGradientEnd,
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: AppColors.cardShadow,
                         blurRadius: 6,
                         offset: const Offset(0, 3),
                       ),
@@ -70,7 +73,7 @@ class FavoritesScreen extends StatelessWidget {
                           if (loadingProgress == null) return child;
                           return const Center(
                             child: CircularProgressIndicator(
-                              color: Colors.white,
+                              color: AppColors.loader,
                             ),
                           );
                         },
@@ -83,18 +86,19 @@ class FavoritesScreen extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14 * textScale,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     subtitle: Text(
                       "\$${product.price}",
                       style: TextStyle(
                         fontSize: 12 * textScale,
-                        color: Colors.green,
+                        color: AppColors.priceGreen,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    trailing:
-                        const Icon(Icons.chevron_right, color: Colors.grey),
+                    trailing: const Icon(Icons.chevron_right,
+                        color: AppColors.iconGrey),
                     onTap: () {
                       Navigator.push(
                         context,

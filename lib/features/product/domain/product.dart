@@ -2,8 +2,8 @@ class Product {
   final int id;
   final String name;
   final double price;
-  final String image;      // main image
-  final String thumbnail;  // thumbnail image
+  final String image; // main image
+  final String thumbnail; // thumbnail image
 
   Product({
     required this.id,
