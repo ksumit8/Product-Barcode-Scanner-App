@@ -6,6 +6,7 @@ import 'provider/favorites_provider.dart';
 
 class ProductScreen extends StatelessWidget {
   final Product product;
+
   const ProductScreen({super.key, required this.product});
 
   @override
@@ -13,16 +14,21 @@ class ProductScreen extends StatelessWidget {
     final favoritesProvider = context.watch<FavoritesProvider>();
     final isFavorite = favoritesProvider.isFavorite(product);
 
+    // MediaQuery values
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final textScale = MediaQuery.textScalerOf(context).scale(1.0);
+
     return Scaffold(
       appBar: CommonAppBar(
-        title: product.name,
+        title: "Product",
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(screenWidth * 0.04),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // 🔥 Product Image with Gradient Background
+            // Product Image with Gradient Background
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
@@ -45,40 +51,48 @@ class ProductScreen extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: AspectRatio(
-                  aspectRatio: 1.2,
+                  aspectRatio: screenWidth < 400 ? 1 : 1.2,
                   child: Image.network(
                     product.image,
                     fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      );
+                    },
                     errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.broken_image, size: 100),
+                        const Icon(Icons.broken_image, size: 100),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: screenHeight * 0.02),
 
             // Product Name
             Text(
               product.name,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20 * textScale,
+                  ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: screenHeight * 0.01),
 
             // Product Price
             Text(
               "\$${product.price}",
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 22,
+              style: TextStyle(
+                fontSize: 18 * textScale,
                 fontWeight: FontWeight.w600,
                 color: Colors.green,
               ),
             ),
-            const SizedBox(height: 25),
+            SizedBox(height: screenHeight * 0.03),
 
             // Favorite Button with Animation
             ElevatedButton.icon(
@@ -103,18 +117,20 @@ class ProductScreen extends StatelessWidget {
                   isFavorite ? Icons.favorite : Icons.favorite_border,
                   key: ValueKey(isFavorite),
                   color: isFavorite ? Colors.red : Colors.grey,
-                  size: 28,
+                  size: screenWidth * 0.07,
                 ),
               ),
               label: Text(
                 isFavorite ? "Remove Favorite" : "Add to Favorite",
+                style: TextStyle(
+                  fontSize: 14 * textScale,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               style: ElevatedButton.styleFrom(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                textStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.05,
+                  vertical: screenHeight * 0.015,
                 ),
               ),
             ),

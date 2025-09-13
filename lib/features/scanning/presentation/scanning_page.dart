@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import '../../../core/widgets/common_app_bar.dart';
-import '../../product/presentation/favorites_screen.dart';
 import 'provider/scanner_provider.dart';
 import '../../product/presentation/product_screen.dart';
 
@@ -27,20 +26,23 @@ class _ScanningPageState extends State<ScanningPage> {
   Widget build(BuildContext context) {
     final provider = context.watch<ScannerProvider>();
 
+    // MediaQuery values
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final textScaler = MediaQuery.textScalerOf(context);
+
     void _handleBarcode(BarcodeCapture capture) async {
       if (_navigated) return;
 
       final code = capture.barcodes.first.rawValue ?? "";
       if (code.isEmpty) return;
 
-      // Immediately stop scanner and set navigated
       _navigated = true;
       scannerController.stop();
 
       await provider.onScanned(code);
 
       if (provider.scannedProduct != null) {
-        // Navigate to ProductScreen once
         if (mounted) {
           Navigator.push(
             context,
@@ -48,46 +50,59 @@ class _ScanningPageState extends State<ScanningPage> {
               builder: (_) => ProductScreen(product: provider.scannedProduct!),
             ),
           ).then((_) {
-            // Reset after coming back
             _navigated = false;
             provider.clear();
             scannerController.start();
           });
         }
       } else {
-        // Invalid product, just reset navigated so user can scan again
         _navigated = false;
         scannerController.start();
       }
     }
 
     return Scaffold(
-      appBar: CommonAppBar(title: "Scan Barcode",),
-
+      appBar: CommonAppBar(title: "Scan Barcode"),
       body: Stack(
         children: [
           MobileScanner(
             controller: scannerController,
             onDetect: _handleBarcode,
           ),
+
+
           if (provider.isLoading)
-            const Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(color: Colors.white),
+            Center(
+              child: SizedBox(
+                width: screenWidth * 0.2, // responsive size
+                height: screenWidth * 0.2,
+                child: const CircularProgressIndicator(
+                  strokeWidth: 6,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.cyanAccent),
+                ),
               ),
             ),
-          if (provider.scannedResult != null && provider.scannedProduct == null)
+
+
+          if (!provider.isLoading &&
+              provider.scannedResult != null &&
+              provider.scannedProduct == null)
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: 80,
+                height: screenHeight * 0.1,
+                // adaptive height
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 color: Colors.black54,
                 alignment: Alignment.center,
                 child: Text(
                   provider.scannedResult!,
-                  style: const TextStyle(color: Colors.white, fontSize: 18),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: textScaler.scale(16),
+                  ),
                 ),
               ),
             ),

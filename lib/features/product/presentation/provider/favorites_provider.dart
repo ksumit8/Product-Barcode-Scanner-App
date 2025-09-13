@@ -37,8 +37,9 @@ class FavoritesProvider extends ChangeNotifier {
   Future<void> _loadFavorites() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonList = prefs.getStringList('favorites') ?? [];
-    _favorites =
-        jsonList.map((jsonStr) => Product.fromJson(jsonDecode(jsonStr))).toList();
+    _favorites = jsonList
+        .map((jsonStr) => Product.fromJson(jsonDecode(jsonStr)))
+        .toList();
     notifyListeners();
   }
 }
